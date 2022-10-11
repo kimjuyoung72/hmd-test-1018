@@ -1,5 +1,6 @@
 package com.kh.Ulsan_Hanmadang.web.form.post;
 
+import com.kh.Ulsan_Hanmadang.domain.post.Promotion;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +29,6 @@ public class EditForm {
   @Size(min=5)
   private String pcontent;      //  내용 BCONTENT	CLOB
   private int hit;              //  조회수
-
+  private Promotion promotion;
   private List<MultipartFile> files;  // 첨부파일
 }

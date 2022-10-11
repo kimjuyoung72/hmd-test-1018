@@ -655,6 +655,7 @@ public class PostDAOImpl implements PostDAO{
     return pList;
   }
 
+
   //홍보정보
   @Override
   public Promotion getPromotionInfoById(Long pid) {
@@ -671,6 +672,27 @@ public class PostDAOImpl implements PostDAO{
               new BeanPropertyRowMapper<>(Promotion.class),
               pid);
     return findedPromotion;
+  }
+
+  @Override
+  public int updatePromotionByPostId(Long pid, Promotion promotion) {
+    StringBuffer sql = new StringBuffer();
+    sql.append("UPDATE promotion ");
+    sql.append("   SET ad_start_day = ?, ");
+    sql.append("       ad_end_day = ?, ");
+    sql.append("       ent_fee = ? ");
+    sql.append(" WHERE post_id = ? ");
+
+    int updatedItemCount = jt.update(
+            sql.toString(),
+            promotion.getAdStartDay(),
+            promotion.getAdEndDay(),
+            promotion.getEntFee(),
+            pid
+    );
+
+    return updatedItemCount;
+
   }
 
   //조회수증가

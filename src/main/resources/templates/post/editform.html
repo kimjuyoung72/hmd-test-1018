@@ -45,63 +45,55 @@
   <main>
     <div class="post-wrap" th:data-code="${category}">
       <!-- <div class="post-title"><h3>게시글 수정</h3></div> -->
-      <div class="post-title"><h3>후기 게시판</h3></div>
+      <div class="post-title" ><h3 th:text="${postTitle['__${category}__']}?:_"></h3></div>
       <div class="class-body" >
-        <form id="editForm" action="" th:action="@{|/post/*{postId}/edit|}" method="post"
-              th:object="${editForm}" enctype="multipart/form-data">
+
+        <form id="editForm" action="" method="post" th:object="${editForm}" enctype="multipart/form-data">
           <input type="hidden" th:field="*{postId}">
           <input type="hidden" th:field="*{email}">
           <input type="hidden" th:field="*{nickname}">
+          <input type="hidden" th:field="*{pcategory}">
+
           <!-- <div class="post-hit">
             <span class="post-hit-content post-hit-tit">조회수</span>
             <span class="post-hit-content post-hit-cnt" th:text="*{hit}">10</span>
           </div> -->
           <div class="post-content">
-            <div><lable>카테고리</lable></div>
-            <div>
-              <select name="" id="" class="w130" th:field="*{pcategory}">
-                <option value="" >==선택==</option>
-                <th:block th:each="code : ${classifier}">
-                  <option value="" th:value="${code.code}" th:text="${code.decode}">게시판1</option>
-                </th:block>
-              </select>
-              <div class="fieldError" th:errors="*{pcategory}"></div>
-            </div>
-            <th:block th:if="${category} == B0102">
-              <div><lable>시작일</lable></div>
-              <div>
-                <input type="date" name="" id="" class="w130" >
-                <div class="fieldError" ></div>
-              </div>
-            </th:block>
-            <th:block th:if="${category} == B0102">
-              <div><lable>마감일</lable></div>
-              <div>
-                <input type="date" name="" id="" class="w130" >
-                <div class="fieldError" ></div>
-              </div>
-            </th:block>
 
             <th:block th:if="${category} == B0103">
               <div><lable>관람일시</lable></div>
               <div>
-                <input type="date" name="" id="" class="w130" >
+                <input type="date" name="" id="dDay" class="w130">
                 <div class="fieldError" ></div>
               </div>
-            </th:block>
-            <th:block th:if="${category} == B0103">
-              <div><lable>제목</lable></div>
+              <div><lable>관람공연</lable></div>
               <div>
-                <select name="" id="" class="w100" th:field="*{title}">
+                <!---------------------------------------------------------->
+                <select name="" id="sawEventSelect" class="w100">
                   <option value="" >==선택==</option>
-                  <th:block th:each="code : ${classifier}">
-                    <option value="" th:value="${code.code}" th:text="${code.decode}">가을음악회</option>
-                  </th:block>
+
                 </select>
-                <div class="fieldError" th:errors="*{title}"></div>
+                <div class="fieldError"></div>
               </div>
             </th:block>
+
             <th:block th:if="${category} == B0102">
+              <div><lable>시작일시</lable></div>
+              <div>
+                <input type="date" name="" id="" class="w130" th:field="*{promotion.adStartDay}" >
+                <!--                <input type="date" name="" id="" class="w130" >-->
+              </div>
+              <div><lable>마감일시</lable></div>
+              <div>
+                <input type="date" name="" id="" class="w130" th:field="*{promotion.adEndDay}">
+                <!--                <input type="date" name="" id="" class="w130">-->
+                <div class="fieldError" ></div>
+              </div>
+              <div><label for="">참가비용</label></div>
+              <div><input type="text" th:field="*{promotion.entFee}"></div>
+              <!--              <div><input type="text"></div>-->
+            </th:block>
+
               <div><lable>제목</lable></div>
               <div>
                 <input type="text" name="" id="" class="w100"th:field="*{title}" >

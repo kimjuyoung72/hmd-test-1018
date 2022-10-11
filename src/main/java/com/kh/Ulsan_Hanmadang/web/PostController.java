@@ -315,8 +315,16 @@ public class PostController {
 
     EditForm editForm = new EditForm();
     BeanUtils.copyProperties(post,editForm);
+    if(cate.equals("B0102")) {
+      Promotion promotion = postSVC.getPromotionInfoById(id);
+      log.info("prom={}", promotion);
+      editForm.setPromotion(promotion);
+      editForm.setPcategory(cate);
+      model.addAttribute("promotion", promotion);
+    }
     model.addAttribute("editForm", editForm);
     model.addAttribute("category",cate);
+
 
     //첨부조회
     List<UploadFile> attachFiles = uploadFileSVC.getFilesByCodeWithRid(post.getPcategory(), post.getPostId());
@@ -325,8 +333,6 @@ public class PostController {
 //      log.info("attachFiles={}",attachFiles);
       model.addAttribute("attachFiles", attachFiles);
     }
-
-
 
     return "post/editForm";
   }
@@ -346,10 +352,27 @@ public class PostController {
     }
 
     String cate = getCategory(category);
+    editForm.setPcategory(cate);
+    log.info("editFormProm={}", editForm.getPromotion());
     Post post = new Post();
-    BeanUtils.copyProperties(editForm, post);
-    postSVC.updateByPostId(id, post);
+//    BeanUtils.copyProperties(editForm, post);
+    post.setPostId(editForm.getPostId());
+    post.setPcategory(editForm.getPcategory());
+    post.setTitle(editForm.getTitle());
+    post.setPcontent(editForm.getPcontent());
+    post.setEmail(editForm.getEmail());
+    post.setNickname(editForm.getNickname());
 
+
+    log.info("EditPost={}",post);
+    postSVC.updateByPostId(id, post);
+    Promotion promotion = new Promotion();
+
+    if (cate.equals("B0102")) {
+      log.info("prom={}", editForm.getPromotion());
+      BeanUtils.copyProperties(editForm.getPromotion(), promotion);
+      postSVC.updatePromotionByPostId(id, promotion);
+    }
     if(editForm.getFiles().get(0).isEmpty()) {
       postSVC.updateByPostId(id, post);
     }else{

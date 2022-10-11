@@ -181,6 +181,10 @@ public class PostSVCImpl implements PostSVC{
   public Promotion getPromotionInfoById(Long pid) {
     return postDAO.getPromotionInfoById(pid);
   }
+  @Override
+  public int updatePromotionByPostId(Long pid, Promotion promotion) {
+    return postDAO.updatePromotionByPostId(pid, promotion);
+  }
 
   @Override
   public int getDisplyEventCount(String date) {

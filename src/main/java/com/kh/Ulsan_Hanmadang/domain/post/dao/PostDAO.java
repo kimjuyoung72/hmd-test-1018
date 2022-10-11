@@ -134,6 +134,13 @@ public interface PostDAO {
   List<Post> getNewPromotion();
 
   /**
+   * 홍보 추가정보 수정
+   * @param pid 글번호
+   * @param promotion 추가정보
+   * @return
+   */
+  int updatePromotionByPostId(Long pid, Promotion promotion);
+  /**
    * 홍보 게시글 조회
    * @param pid 게시글번호
    * @return 홍보정보
