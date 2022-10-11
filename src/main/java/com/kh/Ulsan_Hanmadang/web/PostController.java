@@ -248,7 +248,7 @@ public class PostController {
 
       // 위도 경도 찾기 위함
       FacInfo findedFac = postSVC.findByFacId(eventInfo.getMt10id());
-      log.info("fac = {} ",findedFac);
+//      log.info("fac = {} ",findedFac);
 
       model.addAttribute("fac", findedFac);
       model.addAttribute("event", eventInfoForm);
@@ -261,6 +261,7 @@ public class PostController {
       BeanUtils.copyProperties(detailPost, detailForm);
       model.addAttribute("detailForm", detailForm);
       model.addAttribute("category", cate);
+
       if (cate.equals("B0102")) {
         model.addAttribute("promInfo", postSVC.getPromotionInfoById(id));
       }
@@ -351,13 +352,13 @@ public class PostController {
       return "post/editForm";
     }
 
-    String cate = getCategory(category);
+    String cate = getCategory(category).substring(0,5);
     editForm.setPcategory(cate);
-    log.info("editFormProm={}", editForm.getPromotion());
+    log.info("cate={}", cate);
     Post post = new Post();
 //    BeanUtils.copyProperties(editForm, post);
     post.setPostId(editForm.getPostId());
-    post.setPcategory(editForm.getPcategory());
+    post.setPcategory(cate);
     post.setTitle(editForm.getTitle());
     post.setPcontent(editForm.getPcontent());
     post.setEmail(editForm.getEmail());
