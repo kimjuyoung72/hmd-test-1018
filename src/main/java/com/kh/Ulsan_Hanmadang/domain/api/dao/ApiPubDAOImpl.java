@@ -25,16 +25,26 @@ public class ApiPubDAOImpl implements ApiPubDAO{
     Long eventId = generatePubPostId();
 
     for (PEvent pEvent : pEvents) {
+      String eid = pEvent.getMt20id();
+      sql.append("select count(mt20id) ");
+      sql.append("  from p_event ");
+      sql.append(" where mt20id = ? ");
 
-      sql.append("insert into p_event (event_id, mt20id,prfnm,prfpdfrom,prfpdto,fcltynm,");
-      sql.append("genrenm,prfstate,mt10id,prfcast,prfruntime,");
-      sql.append("prfage,pcseguidance,poster,dtguidance) ");
-      sql.append("values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
+      Integer rowCount = jt.queryForObject(sql.toString(), Integer.class, eid);
+//      log.info("rCnt={}", rowCount);
+      if(rowCount == 0) {
 
-      jt.update(sql.toString(), eventId, pEvent.getMt20id(), pEvent.getPrfnm(), pEvent.getPrfpdfrom(), pEvent.getPrfpdto(),
-              pEvent.getFcltynm(), pEvent.getGenrenm(), pEvent.getPrfstate(), pEvent.getMt10id(), pEvent.getPrfcast(),
-              pEvent.getPrfruntime(), pEvent.getPrfage(), pEvent.getPcseguidance(), pEvent.getPoster(), pEvent.getDtguidance());
-      result = pEvent.getMt10id();
+        sql = new StringBuffer();
+        sql.append("insert into p_event (event_id, mt20id,prfnm,prfpdfrom,prfpdto,fcltynm,");
+        sql.append("genrenm,prfstate,mt10id,prfcast,prfruntime,");
+        sql.append("prfage,pcseguidance,poster,dtguidance) ");
+        sql.append("values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
+
+        jt.update(sql.toString(), eventId, pEvent.getMt20id(), pEvent.getPrfnm(), pEvent.getPrfpdfrom(), pEvent.getPrfpdto(),
+                pEvent.getFcltynm(), pEvent.getGenrenm(), pEvent.getPrfstate(), pEvent.getMt10id(), pEvent.getPrfcast(),
+                pEvent.getPrfruntime(), pEvent.getPrfage(), pEvent.getPcseguidance(), pEvent.getPoster(), pEvent.getDtguidance());
+        result = pEvent.getMt10id();
+      }
     }
 
     return result;

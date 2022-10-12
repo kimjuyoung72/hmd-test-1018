@@ -352,9 +352,11 @@ public class PostController {
       return "post/editForm";
     }
 
-    String cate = getCategory(category).substring(0,5);
+//    String cate = getCategory(category).substring(0,5);
+    String cate = getCategory(category);
+//    log.info(cate);
     editForm.setPcategory(cate);
-    log.info("cate={}", cate);
+//    log.info("cate={}", cate);
     Post post = new Post();
 //    BeanUtils.copyProperties(editForm, post);
     post.setPostId(editForm.getPostId());

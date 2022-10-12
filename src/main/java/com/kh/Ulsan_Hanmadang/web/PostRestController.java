@@ -113,6 +113,7 @@ public class PostRestController {
   @GetMapping("/reply/list/{pid}")
   public ApiResponse<List<Reply>> findAll(@PathVariable("pid") Long pid){
     List<Reply> list = postSVC.findReplyByPostId(pid);
+    log.info("rList={}", list);
     //api응답 메세지
     return ApiResponse.createApiResMsg("00","성공",list);
   }

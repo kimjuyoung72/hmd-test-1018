@@ -61,7 +61,11 @@ public class ApiPubSVCImpl implements ApiPubSVC{
 //                System.out.println(url);
         xmlStr = getApiData(url);
         ress = xmlMapper.readValue(xmlStr, new TypeReference<List<PEvent>>(){});
-        facIds.add(apiPubDAO.savePEvent(ress)); //저장하면서 공연장ID 수집
+        try {
+          facIds.add(apiPubDAO.savePEvent(ress)); //저장하면서 공연장ID 수집
+        } catch (NullPointerException e) {
+          log.info("가져올 공연장 정보가 없습니다.");
+        }
       }
       apiCall2(facIds);   //공연장상세정보 획득/저장
     } catch (Exception e) {

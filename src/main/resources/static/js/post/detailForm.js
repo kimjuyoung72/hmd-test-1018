@@ -56,6 +56,7 @@ function getReplyData(){
 findAll();
 //등록 클릭시
 addReplyBtn.addEventListener('click', e => {
+  console.log("등록 클릭!");
   addReply(getReplyData());
   // console.log(reply.postId, reply.pcategory, reply.nickname, reply.email, reply.rcontent);
 });
@@ -122,7 +123,7 @@ function findAll(){
 
 //수정
 function update(id,rcontent){
-  const rid = document.getElementById('reply_id').value;
+  const rid = document.getElementById('rid').value;
   const url = `http://localhost:9080/api/reply/${rid}`;
   fetch( url,{            //url
     method:'PATCH',        //http method
@@ -145,18 +146,18 @@ function deleteById(id){
   const rid = document.getElementById('rid').value;
   console.log(rid);
 
-  const url = `http://localhost:9080/api/reply/${rid}`;
-  fetch( url,{            //url
-  method:'DELETE',        //http method
-  headers:{             //http header
-    'Accept':'application/json'
-  },
-  }).then(res=>res.json())
-  .then(data=>{
-    console.log(data);
-    findAll();
-  })
-  .catch(err=>console.log(err));
+  // const url = `http://localhost:9080/api/reply/${rid}`;
+  // fetch( url,{            //url
+  // method:'DELETE',        //http method
+  // headers:{             //http header
+  //   'Accept':'application/json'
+  // },
+  // }).then(res=>res.json())
+  // .then(data=>{
+  //   console.log(data);
+  //   findAll();
+  // })
+  // .catch(err=>console.log(err));
 }
 //필드 clear
 function clearForm(){

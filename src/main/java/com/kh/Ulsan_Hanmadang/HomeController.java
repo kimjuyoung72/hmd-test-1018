@@ -174,6 +174,9 @@ public class HomeController {
 //        log.info("before ={}",beforeLoginUrl);
 
         return "redirect:/"+beforeLoginUrl;
+      }else if(beforeLoginUrl.contains("members/login")){
+        // 로그인창일때는 바로 홈화면으로 가도록
+        return "redirect:/";
       }
 
       return "redirect:/";

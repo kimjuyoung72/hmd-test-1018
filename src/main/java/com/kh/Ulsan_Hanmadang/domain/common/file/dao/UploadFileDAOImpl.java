@@ -130,7 +130,7 @@ public class UploadFileDAOImpl implements UploadFileDAO{
 
     List<UploadFile> list = jdbcTemplate.query(sql.toString(),
             new BeanPropertyRowMapper<>(UploadFile.class), code, rid);
-    log.info("list={}",list);
+//    log.info("list={}",list);
     return list;
   }
 

@@ -69,13 +69,14 @@ const category = ($post?.dataset.code)? $post.dataset.code : '';
 //상세
 const $cancelBtn = document.getElementById('cancelBtn');
 $cancelBtn?.addEventListener('click',e=>{
-  const url = `/post/${postId.value}?category=${category}`;
+//  const url = `/post/${postId.value}?category=${category}`;
+  const url = `/post/${postId.value}`;
   location.href = url;
 });
 //저장
 const $saveBtn = document.getElementById('saveBtn');
 $saveBtn?.addEventListener("click", e=>{
-  editForm.action = `${editForm.action}?category=${category}`;
+  editForm.action = `${editForm.action}`;
   editForm.submit();
 });
 //목록
