@@ -60,10 +60,11 @@ replyList.addEventListener('click', e=>{
   const $email = document.getElementById('email');
   console.log(e.target);
   console.log($email.value);
-  console.loge(email);
-  // if(e.target.name == $email.value) {
-  //   console.log("내 댓글!");
-  // }
+  console.log(e.target.dataset.ownerEmail);
+  if(e.target.dataset.ownerEmail == $email.value) {
+    console.log("내 댓글!");
+    e.target.readOnly=false;
+  }
 });
 //등록 클릭시
 addReplyBtn.addEventListener('click', e => {
@@ -129,7 +130,7 @@ function findAll(){
         const result =
           res.data.map(reply =>{
               return `<div class=reply_contents><div class="reply_writer"><span id="rid">${reply.replyId}</span><span>${reply.nickname}</span><span>${reply.email}</span></div>
-                      <textarea readonly="readonly" th:field="*{email}">${reply.rcontent}</textarea></div>`;
+                      <textarea readonly data-owner-email="${reply.email}">${reply.rcontent}</textarea><button type="button">수정</button></div>`;
             });
 //        console.log(result.join(''));
         // document.getElementById('replyList').innerHTML='';

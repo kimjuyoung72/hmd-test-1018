@@ -269,14 +269,16 @@ public class PostController {
       LoginMember loginMember = null;
       try {
         loginMember = (LoginMember)session.getAttribute(SessionConst.LOGIN_MEMBER);
+        log.info("email={}", loginMember.getEmail());
+        model.addAttribute("member", loginMember);
       } catch (NullPointerException e) {
         log.info("가져올 멤버 정보가 없습니다.");
       }
 
-      log.info("email={}", loginMember.getEmail());
+
       model.addAttribute("detailForm", detailForm);
       model.addAttribute("category", cate);
-      model.addAttribute("member", loginMember);
+
 
       if (cate.equals("B0102")) {
         model.addAttribute("promInfo", postSVC.getPromotionInfoById(id));

@@ -106,23 +106,23 @@ function findListByDate(date){
 			'Accept':'application/json'
 		}
 	}).then(res=>res.json())
-		.then(res=>{
-			console.log(res);
-			if(res.header.rtcd == '00'){
-				const result =
-					res.data.map(e => {
-						return `<option>${e}</option>`;
-					});
-					result.unshift(`<option>==선택==</option>`);
-					console.log(result);
-				// console.log(result.join(''));
-				// const head = 
-				document.getElementById('sawEventSelect').innerHTML=result.join('');
+	.then(res=>{
+		console.log(res);
+		if(res.header.rtcd == '00'){
+			const result =
+				res.data.map(e => {
+					return `<option>${e}</option>`;
+				});
+				result.unshift(`<option>==선택==</option>`);
+				console.log(result);
+			// console.log(result.join(''));
+			// const head = 
+			document.getElementById('sawEventSelect').innerHTML=result.join('');
 //				document.getElementById('sawEvent').innerHTML=result.join('');
-			}else{
+		}else{
 
-			}
-			return result;
+		}
+		return result;
 		})
 		.catch(err=>console.log(err));
 }
