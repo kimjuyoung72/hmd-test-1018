@@ -23,9 +23,6 @@ main {
   width:60%
 }
 
-.comments {
-  display: none;
-}
 /* .post-wrap .post-hit{
   display: flex;
   justify-content: end;
@@ -182,10 +179,6 @@ main {
 } */
 
 
-
-
-
-
 /* 댓글 */
 
 /*
@@ -205,16 +198,19 @@ main {
 
 
 
+.comments {
+  display: none;
+}
 
 .comment{
   /* background-color: #f5f5f5; */
+  display: flex;
   margin: 10px 0;
   /* outline: 1px solid red; */
 }
 
 
 .cmt_write{
-  display: flex;
   width: 100%;
   /* outline: 1px solid red; */
 }
@@ -258,7 +254,7 @@ main {
 }
 
 #replyList .reply_writer #rid {
-  display: none;
+ /* display: none; */
 }
 
 #replyList .reply_writer span:nth-child(2) {

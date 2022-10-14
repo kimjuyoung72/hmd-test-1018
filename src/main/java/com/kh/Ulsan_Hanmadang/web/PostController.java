@@ -25,6 +25,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -237,6 +238,7 @@ public class PostController {
   public String detail(
           @PathVariable Long id,
           @RequestParam(required = false) Optional<String> category,
+          HttpServletRequest request,
           Model model) {
 
     String cate = getCategory(category);
@@ -250,17 +252,31 @@ public class PostController {
       FacInfo findedFac = postSVC.findByFacId(eventInfo.getMt10id());
 //      log.info("fac = {} ",findedFac);
 
+
+
       model.addAttribute("fac", findedFac);
       model.addAttribute("event", eventInfoForm);
       model.addAttribute("category", cate);
+
 
       return "post/eventDetailForm";
     }else {
       Post detailPost = postSVC.findByPostId(id);
       DetailForm detailForm = new DetailForm();
       BeanUtils.copyProperties(detailPost, detailForm);
+
+      HttpSession session = request.getSession(false);
+      LoginMember loginMember = null;
+      try {
+        loginMember = (LoginMember)session.getAttribute(SessionConst.LOGIN_MEMBER);
+      } catch (NullPointerException e) {
+        log.info("가져올 멤버 정보가 없습니다.");
+      }
+
+      log.info("email={}", loginMember.getEmail());
       model.addAttribute("detailForm", detailForm);
       model.addAttribute("category", cate);
+      model.addAttribute("member", loginMember);
 
       if (cate.equals("B0102")) {
         model.addAttribute("promInfo", postSVC.getPromotionInfoById(id));

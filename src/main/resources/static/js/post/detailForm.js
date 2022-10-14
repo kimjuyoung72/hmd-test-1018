@@ -54,6 +54,17 @@ function getReplyData(){
 }
 
 findAll();
+// window.addEventListener('click', e=>{console.log('window')});
+// window.document.body.addEventListener('click', e=>{
+replyList.addEventListener('click', e=>{
+  const $email = document.getElementById('email');
+  console.log(e.target);
+  console.log($email.value);
+  console.loge(email);
+  // if(e.target.name == $email.value) {
+  //   console.log("내 댓글!");
+  // }
+});
 //등록 클릭시
 addReplyBtn.addEventListener('click', e => {
   console.log("등록 클릭!");
@@ -77,6 +88,11 @@ delReplyBtn.addEventListener('click', e => {
   // clearForm();
 });
 
+//댓글 리스트 클릭시
+replyList.addEventListener('click', e => {
+  console.log("리플클릭!");
+});
+
 //등록
 function addReply(reply){
 const url = 'http://localhost:9080/api/reply';
@@ -89,7 +105,7 @@ fetch( url,{            //url
   body: JSON.stringify(reply)   //http body      // js객체 => json포맷의 문자열
 }).then(res=>res.json())
   .then(data=>{
-    console.log(data)
+    console.log(data);
      findAll();
      clearForm();
     })
@@ -97,6 +113,8 @@ fetch( url,{            //url
 }
 //목록
 function findAll(){
+  const $email = document.getElementById('email');
+  // console.log($email.value);
   const pid = reply.postId.value;
   const url = `http://localhost:9080/api/reply/list/${pid}`;
   fetch( url,{            //url
@@ -111,9 +129,9 @@ function findAll(){
         const result =
           res.data.map(reply =>{
               return `<div class=reply_contents><div class="reply_writer"><span id="rid">${reply.replyId}</span><span>${reply.nickname}</span><span>${reply.email}</span></div>
-                      <p>${reply.rcontent}</p></div>`;
+                      <textarea readonly="readonly" th:field="*{email}">${reply.rcontent}</textarea></div>`;
             });
-        console.log(result.join(''));
+//        console.log(result.join(''));
         // document.getElementById('replyList').innerHTML='';
         document.getElementById('replyList').innerHTML=result.join('');
 
