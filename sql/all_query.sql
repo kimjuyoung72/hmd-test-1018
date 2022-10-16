@@ -50,6 +50,7 @@ drop sequence member_member_id_seq;
 
 create sequence member_member_id_seq;
 
+
 create table member (
   member_id      number(8),      --기본키
   email         varchar(30),    --(이메일이 아이디)
@@ -61,6 +62,7 @@ create table member (
   sms_service      number(1),
   email_service   number(1),
   gubun           varchar2(11)   default 'M0101', --회원구분 (일반,홍보,관리자..) M0102 홍보
+  good            number(10), --좋아요
   cdate            timestamp default systimestamp,
   udate            timestamp default systimestamp
 );
@@ -113,7 +115,6 @@ drop sequence post_post_id_seq;
 create sequence post_post_id_seq;
 
 create table post(
-    p_event_id  number(10),
     post_id      number(10),         --게시글 번호
     pcategory   varchar2(11),       --분류카테고리
     title       varchar2(150),      --제목
@@ -121,17 +122,10 @@ create table post(
     nickname    varchar2(30),       --별칭
     hit         number(5) default 0,          --조회수
     pcontent    clob,               --본문
---    ppost_id     number(10),         --부모 게시글번호
---    pgroup      number(10),         --답글그룹
---    step        number(3) default 0,          --답글단계
---    pindent     number(3) default 0,          --답글들여쓰기
---    status      char(1),               --답글상태  (삭제: 'D', 임시저장: 'I')
     d_dat       date,
---    ad_start_day  date,
---    ad_end_day    date,
---    ent_fee     varchar2(10),
     cdate       timestamp default systimestamp,         --생성일시
-    udate       timestamp default systimestamp          --수정일시
+    udate       timestamp default systimestamp,          --수정일시
+    p_event_id  number(10)
 );
 
 
@@ -150,30 +144,7 @@ alter table post modify title constraint post_title_nn not null;
 alter table post modify email constraint post_email_nn not null;
 alter table post modify nickname constraint post_nickname_nn not null;
 alter table post modify pcontent constraint post_pcontent_nn not null;
-
-
-insert into post (post_id,pcategory,title,email,nickname,hit,pcontent) values (post_post_id_seq.nextval,'B0103','후기1','test1@kh.com','글쓴이1',3,'잼씀');
-insert into post (post_id,pcategory,title,email,nickname,hit,pcontent) values (post_post_id_seq.nextval,'B0103','후기2','test1@kh.com','글쓴이1',3,'잼씀');
-insert into post (post_id,pcategory,title,email,nickname,hit,pcontent) values (post_post_id_seq.nextval,'B0103','후기3','test1@kh.com','글쓴이1',3,'잼씀');
-insert into post (post_id,pcategory,title,email,nickname,hit,pcontent) values (post_post_id_seq.nextval,'B0103','후기4','test1@kh.com','글쓴이1',3,'잼씀');
-insert into post (post_id,pcategory,title,email,nickname,hit,pcontent) values (post_post_id_seq.nextval,'B0103','후기5','test1@kh.com','글쓴이1',3,'잼씀');
-insert into post (post_id,pcategory,title,email,nickname,hit,pcontent) values (post_post_id_seq.nextval,'B0103','후기6','test1@kh.com','글쓴이1',3,'잼씀');
-insert into post (post_id,pcategory,title,email,nickname,hit,pcontent) values (post_post_id_seq.nextval,'B0103','후기7','test1@kh.com','글쓴이1',3,'잼씀');
-insert into post (post_id,pcategory,title,email,nickname,hit,pcontent) values (post_post_id_seq.nextval,'B0103','후기8','test1@kh.com','글쓴이1',3,'잼씀');
-insert into post (post_id,pcategory,title,email,nickname,hit,pcontent) values (post_post_id_seq.nextval,'B0103','후기9','test1@kh.com','글쓴이1',3,'잼씀');
-insert into post (post_id,pcategory,title,email,nickname,hit,pcontent) values (post_post_id_seq.nextval,'B0103','후기10','test1@kh.com','글쓴이1',3,'잼씀');
-insert into post (post_id,pcategory,title,email,nickname,hit,pcontent) values (post_post_id_seq.nextval,'B0103','후기11','test1@kh.com','글쓴이1',3,'잼씀');
-insert into post (post_id,pcategory,title,email,nickname,hit,pcontent) values (post_post_id_seq.nextval,'B0103','후기12','test1@kh.com','글쓴이1',3,'잼씀');
-insert into post (post_id,pcategory,title,email,nickname,hit,pcontent) values (post_post_id_seq.nextval,'B0103','후기13','test1@kh.com','글쓴이1',3,'잼씀');
-insert into post (post_id,pcategory,title,email,nickname,hit,pcontent) values (post_post_id_seq.nextval,'B0103','후기14','test1@kh.com','글쓴이1',3,'잼씀');
-commit;
-select * from post;
-
-select t1.*
-  from (select row_number() over (order by post_id desc) no, title
-          from post) t1
- where t1.no between 2 and 5;
---delete from post;
+ete from post;
 
 -------------------------------------------------------------------------------------------
 create table promotion(
@@ -196,19 +167,7 @@ alter table promotion add constraint promotion_post_id_fk foreign key(post_id) r
 drop sequence promotion_promotion_id_seq;
 create sequence promotion_promotion_id_seq;
 
-insert into promotion values (promotion_promotion_id_seq.nextval,1,'2022/10/25','2022/10/26','무료');
-select * from promotion;
-select *
-  from promotion
- where post_id = 1;
-select * from post;
-commit;
-select post_post_id_seq.currval
-  from dual;
-select *
-  from post;
------------------------------------------------------------------------------------------
-
+-------------------------------------------------------------------------------------------
 
 --공연장 상세
 
@@ -231,10 +190,6 @@ alter table p_facility add constraint p_facility_mt10id_pk primary key(mt10id);
 
 
 -------------------------------------------------------------------------------------------
-
---select * from p_event;
---delete from p_event;
---commit;
 
 --공연전시 공공데이터
 
@@ -270,35 +225,16 @@ create table p_event(
 alter table p_event add constraint p_event_mt20id_pk primary key(mt20id);
 --alter table p_event add constraint p_event_mt10id_fk foreign key(mt10id) references p_facility(mt10id);
 --alter table p_event drop constraint p_event_mt10id_fk;
-commit;
-select t1.*
-  from (select row_number() over (order by event_id desc) no, prfnm
-          from p_event) t1
-where t1.no between 3 and 8;
-select count(*) from p_event;
-
-select count(*)
-  from p_event
- where to_date(prfpdto) > '2022.09.25';
-
-select t1.*
-  from (select row_number() over (order by prfpdto) no, poster
-          from p_event
-         where to_date(prfpdto) > '2022.09.25') t1
- where t1.no < 6;
--------------------------------------------------------------------------------------------
 
 ---------
 --댓글
 ---------
 
-drop table reply;
 drop sequence reply_reply_id_seq;
-
-
 
 create sequence reply_reply_id_seq;
 
+--drop table reply;
 create table reply(
   reply_id        number(10),
   post_id       number(10),
@@ -309,9 +245,11 @@ create table reply(
   cdate           timestamp default systimestamp,
   udate           timestamp default systimestamp
 );
-select * from reply;
-insert into reply(reply_id,post_id,pcategory,email,nickname,rcontent) values (reply_reply_seq.nextval, 3, 'B0102', 'test1@kh.com', 'test1','잼씀');
-commit;
+--select * from reply;
+--insert into reply(reply_id,post_id,pcategory,email,nickname,rcontent) values (reply_reply_seq.nextval, 3, 'B0102', 'test1@kh.com', 'test1','잼씀');
+--delete from reply;
+--select * from member;
+--commit;
 --기본키
 alter table reply add constraint reply_reply_id_pk primary key(reply_id);
 
@@ -321,11 +259,6 @@ alter table reply add constraint reply_post_id_fk
 alter table reply add constraint reply_email_fk
     foreign key(email) references member(email);
 --제약조건
-
-
-
--------------------------------------------------------------------------------------------
-
 
 
 drop sequence uploadfile_uploadfile_id_seq;
@@ -361,11 +294,6 @@ alter table uploadfile modify upload_filename constraint uploadfile_upload_filen
 alter table uploadfile modify fsize constraint uploadfile_fsize_nn not null;
 alter table uploadfile modify ftype constraint uploadfile_ftype_nn not null;
 
-
--------------------------------------------------------------------------------------------
-
-
-
 ---------
 --좋아요
 ---------
@@ -391,27 +319,5 @@ alter table good add constraint good_post_id_fk
 alter table good add constraint good_email_fk
     foreign key(email) references member(email);
 --======================================================================
-commit;
---select * from member;
---select * from p_event;
---select * from promotion;
-select *
-  from reply
-order by reply_id;
---
---select *
---  from reply
--- where post_id = 21
---order by reply_id desc;
---
---select reply_reply_id_seq.nextval
---  from dual;
-
-create sequence reply_reply_seq;
-alter table promotion drop constraint promotion_post_id_fk;
-alter table reply drop constraint reply_post_id_fk;
-alter table post drop constraint post_email_fk;
-alter table reply drop constraint reply_email_fk;
-
-
-commit;
+--commit;
+select * from member;
