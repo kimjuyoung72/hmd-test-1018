@@ -58,12 +58,35 @@ findAll();
 // window.document.body.addEventListener('click', e=>{
 replyList.addEventListener('click', e=>{
   const $email = document.getElementById('email');
+
   console.log(e.target);
   console.log($email.value);
   console.log(e.target.dataset.ownerEmail);
+  console.log(e.target.dataset.replyId);
+
   if(e.target.dataset.ownerEmail == $email.value) {
     console.log("내 댓글!");
-    e.target.readOnly=false;
+    if(e.target.readOnly == true) {
+      e.target.readOnly=false;
+    } 
+  }
+  if(e.target.dataset.buttonName == 'editReplyBtn') {
+    console.log('수정클릭!');
+
+    // const rcontent = e.target.previousSibling.value;
+    console.log(e.target);
+    const rcontent = e.target.closest('div').previousSibling.previousSibling.value;
+    console.log(rcontent);
+    const rid = e.target.closest('div').previousSibling.previousSibling.dataset.replyId;
+    console.log(rid);
+
+    update(rid, rcontent);
+  }
+  if(e.target.dataset.buttonName == 'delReplyBtn') {
+    console.log('삭제클릭!');
+    const rid = e.target.closest('div').previousSibling.previousSibling.dataset.replyId;
+    console.log(rid);
+    deleteById(rid);
   }
 });
 //등록 클릭시
@@ -73,26 +96,26 @@ addReplyBtn.addEventListener('click', e => {
   // console.log(reply.postId, reply.pcategory, reply.nickname, reply.email, reply.rcontent);
 });
 //수정 클릭시
-editReplyBtn.addEventListener('click', e => {
+// editReplyBtn.addEventListener('click', e => {
   //1)유효성 체크
   // validChk()
   //2)수정처리
-  update(reply.productId.value, getInputData());
-});
+  // update(reply.productId.value, getInputData());
+// });
 
 //삭제 클릭시
-delReplyBtn.addEventListener('click', e => {
-  console.log("del click");
-  if(!confirm('삭제하시겠습니까?')) return;
-  const rid = reply.replyId;
-  deleteById(rid);
-  // clearForm();
-});
+// delReplyBtn.addEventListener('click', e => {
+//   console.log("del click");
+//   if(!confirm('삭제하시겠습니까?')) return;
+//   const rid = reply.replyId;
+//   deleteById(rid);
+//   // clearForm();
+// });
 
 //댓글 리스트 클릭시
-replyList.addEventListener('click', e => {
-  console.log("리플클릭!");
-});
+// replyList.addEventListener('click', e => {
+//   console.log("리플클릭!");
+// });
 
 //등록
 function addReply(reply){
@@ -129,8 +152,10 @@ function findAll(){
       // if(res.header.rtcd == '00'){
         const result =
           res.data.map(reply =>{
-              return `<div class=reply_contents><div class="reply_writer"><span id="rid">${reply.replyId}</span><span>${reply.nickname}</span><span>${reply.email}</span></div>
-                      <textarea readonly data-owner-email="${reply.email}">${reply.rcontent}</textarea><button type="button">수정</button></div>`;
+              return `<div class=reply_contents><div class="reply_writer"><span>${reply.nickname}</span><span>${reply.email}</span></div>
+                      <textarea readonly data-owner-email="${reply.email}" data-reply-id="${reply.replyId}">${reply.rcontent}</textarea>
+                      <div><button data-button-name="editReplyBtn" type="button">수정</button>
+                      <button data-button-name="delReplyBtn" type="button">삭제</button></div>`;
             });
 //        console.log(result.join(''));
         // document.getElementById('replyList').innerHTML='';
@@ -141,9 +166,11 @@ function findAll(){
 }
 
 //수정
-function update(id,rcontent){
-  const rid = document.getElementById('rid').value;
-  const url = `http://localhost:9080/api/reply/${rid}`;
+function update(id, content){
+  console.log(id);
+  console.log(content);
+
+  const url = `http://localhost:9080/api/reply/${id}`;
   fetch( url,{            //url
     method:'PATCH',        //http method
     headers:{             //http header
@@ -151,7 +178,7 @@ function update(id,rcontent){
       'Accept':'application/json'
     },
     // body: JSON.stringify(product)  //http body
-    body: rcontent
+    body: content
   }).then(res=>res.json())
     .then(data=>{
       console.log(data);
@@ -162,21 +189,22 @@ function update(id,rcontent){
 
 //삭제
 function deleteById(id){
-  const rid = document.getElementById('rid').value;
-  console.log(rid);
+  
+  console.log(id);
+  if(!confirm('삭제하시겠습니까?')) return;
 
-  // const url = `http://localhost:9080/api/reply/${rid}`;
-  // fetch( url,{            //url
-  // method:'DELETE',        //http method
-  // headers:{             //http header
-  //   'Accept':'application/json'
-  // },
-  // }).then(res=>res.json())
-  // .then(data=>{
-  //   console.log(data);
-  //   findAll();
-  // })
-  // .catch(err=>console.log(err));
+  const url = `http://localhost:9080/api/reply/${id}`;
+  fetch( url,{            //url
+  method:'DELETE',        //http method
+  headers:{             //http header
+    'Accept':'application/json'
+  },
+  }).then(res=>res.json())
+  .then(data=>{
+    console.log(data);
+    findAll();
+  })
+  .catch(err=>console.log(err));
 }
 //필드 clear
 function clearForm(){

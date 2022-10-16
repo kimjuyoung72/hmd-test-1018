@@ -496,7 +496,7 @@ public class PostDAOImpl implements PostDAO{
 //    log.info("r={}", reply);
     StringBuffer sql = new StringBuffer();
     sql.append("insert into reply (reply_id,post_id,pcategory,email,nickname,rcontent) ");
-    sql.append("values(reply_reply_seq.nextval,?,?,?,?,?) ");
+    sql.append("values(reply_reply_id_seq.nextval,?,?,?,?,?) ");
 
     KeyHolder keyHolder = new GeneratedKeyHolder();
     jt.update(new PreparedStatementCreator() {
@@ -520,7 +520,7 @@ public class PostDAOImpl implements PostDAO{
     StringBuffer sql = new StringBuffer();
     sql.append("select rcontent ");
     sql.append("  from reply ");
-    sql.append(" where rid = ? ");
+    sql.append(" where reply_id = ? ");
 
     Reply findedReply = null;
     try {
