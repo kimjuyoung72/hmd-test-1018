@@ -269,7 +269,7 @@ public class PostController {
       LoginMember loginMember = null;
       try {
         loginMember = (LoginMember)session.getAttribute(SessionConst.LOGIN_MEMBER);
-        log.info("email={}", loginMember.getEmail());
+//        log.info("email={}", loginMember.getEmail());
         model.addAttribute("member", loginMember);
       } catch (NullPointerException e) {
         log.info("가져올 멤버 정보가 없습니다.");

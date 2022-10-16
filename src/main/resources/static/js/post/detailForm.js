@@ -37,13 +37,10 @@ const reply = {
   email:document.getElementById('email'),
   nickname:document.getElementById('nickname'),
   rcontent:document.getElementById('rcontent'),
-  //mode: null
-  //mode: null
 }
 
 //입력데이터 가져오기
 function getReplyData(){
-
   const postId = reply.postId.value;
   const pcategory = reply.pcategory.value;
   const email = reply.email.value;
@@ -53,16 +50,15 @@ function getReplyData(){
   return {postId, pcategory, email, nickname, rcontent};
 }
 
-findAll();
-// window.addEventListener('click', e=>{console.log('window')});
-// window.document.body.addEventListener('click', e=>{
+findAll();  //댓글 목록 표시
+
 replyList.addEventListener('click', e=>{
   const $email = document.getElementById('email');
 
-  console.log(e.target);
-  console.log($email.value);
-  console.log(e.target.dataset.ownerEmail);
-  console.log(e.target.dataset.replyId);
+  // console.log(e.target);
+  // console.log($email.value);
+  // console.log(e.target.dataset.ownerEmail);
+  // console.log(e.target.dataset.replyId);
 
   if(e.target.dataset.ownerEmail == $email.value) {
     console.log("내 댓글!");
@@ -71,22 +67,12 @@ replyList.addEventListener('click', e=>{
     } 
   }
   if(e.target.dataset.buttonName == 'editReplyBtn') {
-    console.log('수정클릭!');
-
-    // const rcontent = e.target.previousSibling.value;
-    console.log(e.target);
     const rcontent = e.target.closest('div').previousSibling.previousSibling.value;
-    console.log(rcontent);
     const rid = e.target.closest('div').previousSibling.previousSibling.dataset.replyId;
-    console.log(rid);
-
     update(rid, rcontent);
   }
   if(e.target.dataset.buttonName == 'delReplyBtn') {
-    console.log('삭제클릭!');
     const rid = e.target.closest('div').previousSibling.previousSibling.dataset.replyId;
-    console.log(rid);
-    deleteById(rid);
   }
 });
 //등록 클릭시
@@ -95,27 +81,6 @@ addReplyBtn.addEventListener('click', e => {
   addReply(getReplyData());
   // console.log(reply.postId, reply.pcategory, reply.nickname, reply.email, reply.rcontent);
 });
-//수정 클릭시
-// editReplyBtn.addEventListener('click', e => {
-  //1)유효성 체크
-  // validChk()
-  //2)수정처리
-  // update(reply.productId.value, getInputData());
-// });
-
-//삭제 클릭시
-// delReplyBtn.addEventListener('click', e => {
-//   console.log("del click");
-//   if(!confirm('삭제하시겠습니까?')) return;
-//   const rid = reply.replyId;
-//   deleteById(rid);
-//   // clearForm();
-// });
-
-//댓글 리스트 클릭시
-// replyList.addEventListener('click', e => {
-//   console.log("리플클릭!");
-// });
 
 //등록
 function addReply(reply){
@@ -148,19 +113,20 @@ function findAll(){
     }
   }).then(res=>res.json())
     .then(res =>{
-      // console.log(res);
-      // if(res.header.rtcd == '00'){
         const result =
           res.data.map(reply =>{
-              return `<div class=reply_contents><div class="reply_writer"><span>${reply.nickname}</span><span>${reply.email}</span></div>
-                      <textarea readonly data-owner-email="${reply.email}" data-reply-id="${reply.replyId}">${reply.rcontent}</textarea>
-                      <div><button data-button-name="editReplyBtn" type="button">수정</button>
-                      <button data-button-name="delReplyBtn" type="button">삭제</button></div>`;
-            });
-//        console.log(result.join(''));
-        // document.getElementById('replyList').innerHTML='';
-        document.getElementById('replyList').innerHTML=result.join('');
+              if(reply.email == $email.value) {
 
+                return `<div class=reply_contents><div class="reply_writer"><span>${reply.nickname}</span><span>${reply.email}</span></div>
+                        <textarea readonly data-owner-email="${reply.email}" data-reply-id="${reply.replyId}">${reply.rcontent}</textarea>
+                        <div><button data-button-name="editReplyBtn" type="button">수정</button>
+                        <button data-button-name="delReplyBtn" type="button">삭제</button></div>`;
+              }else {
+                return `<div class=reply_contents><div class="reply_writer"><span>${reply.nickname}</span><span>${reply.email}</span></div>
+                        <textarea readonly data-owner-email="${reply.email}" data-reply-id="${reply.replyId}">${reply.rcontent}</textarea><div>`
+              }
+            });
+        document.getElementById('replyList').innerHTML=result.join('');
   })
   .catch(err=>console.log(err));
 }

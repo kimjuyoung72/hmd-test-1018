@@ -23,6 +23,7 @@ public class PostRestController {
 
   private final PostSVC postSVC;
 
+  //등록
   @PostMapping(value = "/reply")
   public ApiResponse<Object> addReply(
           @RequestBody AddReplyReq addReplyReq,
@@ -113,7 +114,7 @@ public class PostRestController {
   @GetMapping("/reply/list/{pid}")
   public ApiResponse<List<Reply>> findAll(@PathVariable("pid") Long pid){
     List<Reply> list = postSVC.findReplyByPostId(pid);
-    log.info("rList={}", list);
+//    log.info("rList={}", list);
     //api응답 메세지
     return ApiResponse.createApiResMsg("00","성공",list);
   }
@@ -125,7 +126,7 @@ public class PostRestController {
     List<String> findedEvents = new ArrayList<>();
 
     findedEvents = postSVC.findAllEventByDate(date);
-    log.info("fEvent={}", findedEvents);
+//    log.info("fEvent={}", findedEvents);
     //api응답 메세지
     return ApiResponse.createApiResMsg("00","성공",findedEvents);
   }
