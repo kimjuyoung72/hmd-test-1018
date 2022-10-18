@@ -243,6 +243,16 @@ public class PostController {
 
     String cate = getCategory(category);
 
+    HttpSession session = request.getSession(false);
+    LoginMember loginMember = null;
+    try {
+      loginMember = (LoginMember)session.getAttribute(SessionConst.LOGIN_MEMBER);
+//        log.info("email={}", loginMember.getEmail());
+      model.addAttribute("member", loginMember);
+    } catch (NullPointerException e) {
+      log.info("가져올 멤버 정보가 없습니다.");
+    }
+
     if (cate.equals("B0101")) {
       EventInfo eventInfo = postSVC.findByEventId(id);
       EventInfoForm eventInfoForm = new EventInfoForm();
@@ -257,6 +267,7 @@ public class PostController {
       model.addAttribute("fac", findedFac);
       model.addAttribute("event", eventInfoForm);
       model.addAttribute("category", cate);
+      model.addAttribute("postId", id);
 
 
       return "post/eventDetailForm";
@@ -265,15 +276,15 @@ public class PostController {
       DetailForm detailForm = new DetailForm();
       BeanUtils.copyProperties(detailPost, detailForm);
 
-      HttpSession session = request.getSession(false);
-      LoginMember loginMember = null;
-      try {
-        loginMember = (LoginMember)session.getAttribute(SessionConst.LOGIN_MEMBER);
-//        log.info("email={}", loginMember.getEmail());
-        model.addAttribute("member", loginMember);
-      } catch (NullPointerException e) {
-        log.info("가져올 멤버 정보가 없습니다.");
-      }
+//      HttpSession session = request.getSession(false);
+//      LoginMember loginMember = null;
+//      try {
+//        loginMember = (LoginMember)session.getAttribute(SessionConst.LOGIN_MEMBER);
+////        log.info("email={}", loginMember.getEmail());
+//        model.addAttribute("member", loginMember);
+//      } catch (NullPointerException e) {
+//        log.info("가져올 멤버 정보가 없습니다.");
+//      }
 
 
       model.addAttribute("detailForm", detailForm);
