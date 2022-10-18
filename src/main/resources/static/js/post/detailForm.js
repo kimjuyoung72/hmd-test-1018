@@ -73,6 +73,7 @@ replyList.addEventListener('click', e=>{
   }
   if(e.target.dataset.buttonName == 'delReplyBtn') {
     const rid = e.target.closest('div').previousSibling.previousSibling.dataset.replyId;
+    deleteById(rid);
   }
 });
 //등록 클릭시
